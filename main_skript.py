@@ -10,6 +10,8 @@ class Datapoint:
         self.cveID = cveID
         self.description = description
         self.publishDate = pulishDate
+    def __str__(self):
+     return "ID: "+self.cveID+"\n   Published: "+self.publishDate+"\n   Description:"+self.description
 
 # Constants
 API = 'https://services.nvd.nist.gov/rest/json/cves/2.0'
@@ -57,6 +59,10 @@ def build_datapoints(data):
         datapoints.append(datapoint)
     return datapoints
 
+def print_datapoints(datapoints):
+    for datapoint in datapoints:
+        print(str(datapoint))
+
 if(open(JSON_FILE, "r").read() == None):
     response = pull()
     data = json.loads(response[1])
@@ -68,5 +74,7 @@ vulns = data["vulnerabilities"]
 
 
 datapoints = sorted(build_datapoints(vulns), key=lambda x: x.publishDate)
+
+print_datapoints(datapoints)
 #print(datapoints)
 
