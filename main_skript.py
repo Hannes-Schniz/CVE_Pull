@@ -36,4 +36,7 @@ else:
      with open(JSON_FILE, 'r') as f:
         data = json.load(f)
 
-print(data)
+vulns = data["vulnerabilities"]
+
+for vuln in vulns:
+    print(vuln["cve"]["id"])
