@@ -6,7 +6,7 @@ import json
 API = 'https://services.nvd.nist.gov/rest/json/cves/2.0'
 UPDATE = 'https://services.nvd.nist.gov/rest/json/cvehistory/2.0'
 JSON_FILE= 'CVE-Data.json'
-
+MD_TEMPLATE='# Description\n%s\n# Published:\n%s'
 
 
 
@@ -32,7 +32,7 @@ def save_to_json(raw_data):
 def save_to_md(datapoints:list):
     for datapoint in datapoints:
         with open("data/"+datapoint[0]+".md", 'w') as f:
-            print("# Description\n"+ datapoint[1]+"\n# Published:\n"+datapoint[2], file=f) 
+            print(MD_TEMPLATE % (datapoint[1], datapoint[2]), file=f) 
 
 if(open(JSON_FILE, "r").read() == None):
     response = pull()
