@@ -29,6 +29,11 @@ def save_to_json(raw_data):
         print(raw_data, file=f) 
 #print(data)
 
+def save_to_md(datapoints:list):
+    for datapoint in datapoints:
+        with open("data/"+datapoint[0]+".md", 'w') as f:
+            print("# Description\n"+ datapoint[1]+"\n# Published:\n"+datapoint[2], file=f) 
+
 if(open(JSON_FILE, "r").read() == None):
     response = pull()
     data = json.loads(response[1])
@@ -38,5 +43,16 @@ else:
 
 vulns = data["vulnerabilities"]
 
+
+datapoints = []
 for vuln in vulns:
-    print(vuln["cve"]["id"])
+    datapoint = [vuln["cve"]["id"], "", vuln["cve"]["published"]]
+    for description in vuln["cve"]["descriptions"]:
+        if description["lang"] == "en":
+            datapoint[1] = description["value"]
+
+    datapoints.append(datapoint)
+
+datapoints = sorted(datapoints,key=lambda x: x[2])
+#print(datapoints)
+
