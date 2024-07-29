@@ -1,6 +1,15 @@
 import requests
 import json
 
+class Datapoint:
+    cveID = ""
+    description = ""
+    publishDate = ""
+
+    def __init__(self, cveID, description, pulishDate) -> None:
+        self.cveID = cveID
+        self.description = description
+        self.publishDate = pulishDate
 
 # Constants
 API = 'https://services.nvd.nist.gov/rest/json/cves/2.0'
@@ -40,10 +49,10 @@ def save_to_md(datapoints:list):
 def build_datapoints(data):
     datapoints = []
     for vuln in data:
-        datapoint = [vuln["cve"]["id"], "", vuln["cve"]["published"]]
+        datapoint = Datapoint(vuln["cve"]["id"], "", vuln["cve"]["published"])
         for description in vuln["cve"]["descriptions"]:
             if description["lang"] == "en":
-                datapoint[1] = description["value"]
+                datapoint.description = description["value"]
 
         datapoints.append(datapoint)
     return datapoints
@@ -58,6 +67,6 @@ else:
 vulns = data["vulnerabilities"]
 
 
-datapoints = sorted(build_datapoints(vulns))
+datapoints = sorted(build_datapoints(vulns), key=lambda x: x.publishDate)
 #print(datapoints)
 
